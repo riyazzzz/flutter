@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "992756660706",
+    "firebase_url": "https://flutter-a2f52-default-rtdb.firebaseio.com",
+    "project_id": "flutter-a2f52",
+    "storage_bucket": "flutter-a2f52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992756660706:android:fccc66b4b5933fff62a1bb",
+        "android_client_info": {
+          "package_name": "com.example.flutter_map"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992756660706-v8mquptoh82oqtht03f3jmdopt160v3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj7yRz5Ak3igQp9g7ScM0POPPecPsviLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992756660706-v8mquptoh82oqtht03f3jmdopt160v3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
