@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/Category_Provider.dart';
+import 'package:flutter_map/Product_Provider.dart';
 import 'package:flutter_map/Products.dart';
 import 'package:flutter_map/listProduct.dart';
 import 'package:flutter_map/singleProduct.dart';
@@ -16,7 +17,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-CategoryProvider provider;
+CategoryProvider categoryProvider;
+ProductProvider productProvider;
 Product menData;
 Product womenData;
 var mySnapShot;
@@ -42,78 +44,177 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Widget _buildarchives(){
-    return        Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+Widget _buildfeauture (){
+  List<Product> feautureProduct;
+  feautureProduct=productProvider.getFeautureList;
+  List<Product> homeFeatureProduct;
+  homeFeatureProduct=productProvider.getHomeFeautureList;
+
+    return  Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => DetailScreen(
-                    image: Bulb.image,
-                    price: Bulb.price,
-                    name: Bulb.name,
-              )
-              ),
-            );
-          },
-          child: SingleProduct(
-              image: Bulb.image,price: Bulb.price,  name: Bulb.name),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => DetailScreen(
-                  image: Chair.image,
-                  price: Chair.price,
-                  name: Chair.name,
-                ),
-              ),
-            );
-          },
-          child: SingleProduct(
-            image: Chair.image,
-            price: Chair.price,
-            name: Chair.name,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              "Feautured",
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            GestureDetector(
+              onTap: () {
+  Navigator.of(context).push(
+  MaterialPageRoute(
+  builder: (ctx) => ListProduct(
+  name: "Featured",
+  snapShot:feautureProduct,
+  ),
+  ),
+  );
+  },
+  child: Text(
+  "See All",
+  style: TextStyle(
+  fontSize: 15, fontWeight: FontWeight.bold),
+  ),
+  ),
+  ],
+  ),
+  Container(
+width:360,
+    child: Row(
+mainAxisAlignment: MainAxisAlignment.center,
+                    children:homeFeatureProduct .map((e){
+                  return Expanded(
+                    child: Row(
+                      children:<Widget> [
+
+                        GestureDetector(
+
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (ctx) => DetailScreen(
+                                    image:e.image,
+                                    price: e.price,
+                                    name: e.name
+                                ),
+                              ),
+                            );
+                          },
+                          child: SingleProduct(
+                              image:e.image,
+                              price: e.price,
+                              name: e.name
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (ctx) => DetailScreen(image:feautureProduct.elementAt(1).image, price: feautureProduct.elementAt(1).price, name: feautureProduct.elementAt(1).name),
+                                ),
+                              );
+                            },
+                            child: SingleProduct(image:feautureProduct.elementAt(1).image, price: feautureProduct.elementAt(1).price, name: feautureProduct.elementAt(1).name),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                    }).toList(),
+
+
+                  ),
+  ),
+],
+  );
+
+}
+Widget _buildnewArchives() {
+  List<Product> newarchiveProduct = productProvider.getNewAchivesList;
+  return  Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            "NewArchives",
+            style: TextStyle(
+                fontSize: 15, fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
-    );
-  }
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) =>
+                      ListProduct(
+                        name: "newArchive",
+                        snapShot: newarchiveProduct,
+                  ),
+                ),
+              );
+            },
+            child: Text(
+              "See All",
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+      Container(
 
-  Widget _buildproduct(){
-    return  Row(
-mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        GestureDetector(
+        width:360,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+          children: productProvider.getHomenewArchiveList.map((e) {
+           return Expanded(
+             child: Row(
 
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => DetailScreen(
-                    image: menData.image, price: menData.price , name:menData.name ),
+                children: <Widget>[
+                  Expanded(
+                    child: GestureDetector(
+
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (ctx) => DetailScreen(
+                                image:e.image,price:e.price,  name:e.name
+                            ),
+                          ),
+                        );
+                      },
+                      child: SingleProduct(
+                          image:e.image,price:e.price,  name:e.name
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (ctx) => DetailScreen(image:e.image,price:e.price,  name:e.name),
+                        ),
+                      );
+                    },
+                    child: SingleProduct( image:e.image,price:e.price,  name:e.name),
+                  ),
+                ],
               ),
-            );
-          },
-          child: SingleProduct(
-              image: menData.image, price: menData.price, name: menData.name),
+           );
+          }).toList()
+
+
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (ctx) => DetailScreen(
-                    image: womenData.image, price: womenData.price, name: womenData.name),
-              ),
-            );
-          },
-          child: SingleProduct(image:womenData.image, price:womenData.price, name: womenData.name),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+
+}
+
+
 
   Widget _buildMyDrawer() {
     return Drawer(
@@ -171,13 +272,13 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   }
 
   Widget _category() {
-    List<Product> shirts= provider.getShirtList;
+    List<Product> shirts= categoryProvider.getShirtList;
 
-    List<Product> Pant= provider.getPantList;
+    List<Product> Pant= categoryProvider.getPantList;
 
-    List<Product> shoe= provider.getshoeList;
+    List<Product> shoe= categoryProvider.getshoeList;
 
-    List<Product> tie= provider.gettieList;
+    List<Product> tie= categoryProvider.gettieList;
     return Column(children: [
       Container(
         height: 35,
@@ -252,11 +353,16 @@ mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
   @override
   Widget build(BuildContext context) {
-    provider=Provider.of<CategoryProvider>(context);
-    provider.getShirtData();
-provider.gettieData();
-provider.getshoeData();
-provider.getPantData();
+    categoryProvider=Provider.of<CategoryProvider>(context);
+    categoryProvider.getShirtData();
+categoryProvider.gettieData();
+categoryProvider.getshoeData();
+categoryProvider.getPantData();
+productProvider=Provider.of<ProductProvider>(context);
+productProvider.NewAchiveData();
+productProvider.getFuturetData();
+productProvider.getHomeFuturetData();
+productProvider.getHomenewArchiveData();
     return Scaffold(
         key: _key,
         drawer: _buildMyDrawer(),
@@ -284,48 +390,7 @@ provider.getPantData();
             )
           ],
         ),
-        body: FutureBuilder(
-          future : Firestore.instance.collection("products").document("NuaYpiOSF0DenEdpF6rP").collection("feautureproduct").getDocuments(),
-          builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child:CircularProgressIndicator(),
-              );
-            }
-mySnapShot=snapshot;
-            menData = Product(
-              name : snapshot.data.documents[0]["name"],
-                image : snapshot.data.documents[0]["image"],
-                price: snapshot.data.documents[0]["price"]
-            );
-
-            womenData = Product(
-                name : snapshot.data.documents[1]["name"],
-                image : snapshot.data.documents[1]["image"],
-                price: snapshot.data.documents[1]["price"]
-            );
-
-
-                return FutureBuilder(
-                  future:  Firestore.instance.collection("products").document("NuaYpiOSF0DenEdpF6rP").collection("newAchives").getDocuments(),
-                  builder: (context, snapShot) {
-                    if(snapShot.connectionState == ConnectionState.waiting){
-                      return Center(child:CircularProgressIndicator(),
-                      );
-                    }
-                          newAchive=snapShot;
-                    Bulb = Product(
-                        name : snapShot.data.documents[0]["name"],
-                        image : snapShot.data.documents[0]["image"],
-                        price: snapShot.data.documents[0]["price"]
-                    );
-
-                    Chair= Product(
-                        name : snapShot.data.documents[1]["name"],
-                        image : snapShot.data.documents[1]["image"],
-                        price: snapShot.data.documents[1]["price"]
-                    );
-
-                    return Container(
+        body:Container(
                       height: double.infinity,
                       width: double.infinity,
                       child: ListView(
@@ -336,83 +401,13 @@ mySnapShot=snapshot;
                           SizedBox(
                             height: 15,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "Feautured",
-                                style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (ctx) => ListProduct(
-                                        name: "Featured",
-                                        snapShot:mySnapShot,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "See All",
-                                  style: TextStyle(
-                                      fontSize: 15, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
 
-                            height:260,
-                              width: 390,
-                              child:
-                          _buildproduct()),
-                          Container(
-                            height: 30,
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "New Achives",
+                          _buildfeauture(),
+                          _buildnewArchives(),
 
-                                  style: TextStyle(
-                                      fontSize: 15, fontWeight: FontWeight.bold),
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (ctx) =>
-                                              ListProduct(name: "New Archives",
-                                                snapShot:newAchive
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      "See All",
-                                      style: TextStyle(
-                                          fontSize: 15, fontWeight: FontWeight.bold),
-                                    )),
-                              ],
-                            ),
-                          ),
-
-                          Container(
-                              height:260,
-                              width: 390,
-
-                              child: _buildarchives()),
                         ],
                       ),
-                    );
-                  }
-                );
-              },
-        ),
+        )
     );
 
   }

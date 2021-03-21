@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'Products.dart';
 class ProductProvider with ChangeNotifier{
 
-    List<Product>Feauture=[];
-Product FeautureData;
-Future<void>getShirtData()async{
+    List<Product>feauture=[];
+Product feautureData;
+Future<void>getFuturetData()async{
   List<Product> newList=[];
     QuerySnapshot shirtSnapShot=await Firestore.instance
         .collection("products").
@@ -14,27 +14,28 @@ Future<void>getShirtData()async{
         .collection("feautureproduct")
         .getDocuments();
     shirtSnapShot.documents.forEach((element) {
-      FeautureData=Product(
+      feautureData=Product(
           image:element.data["image"],
           name: element.data["name"],
           price: element.data["price"]);
-      newList.add(FeautureData);
+      newList.add(feautureData);
     },
     );
-    Feauture = newList;
+    feauture = newList;
+  notifyListeners();
 
   }
-  List<Product>get getShirtList{
-    return Feauture;
+  List<Product>get getFeautureList{
+    return feauture;
   }
     List<Product>newAchives=[];
     Product newAchivesData;
-    Future<void>newAchiveData()async{
+    Future<void>NewAchiveData()async{
       List<Product> newList=[];
       QuerySnapshot shirtSnapShot=await Firestore.instance
           .collection("products").
       document("NuaYpiOSF0DenEdpF6rP")
-          .collection("feautureproduct")
+          .collection("newAchives")
           .getDocuments();
       shirtSnapShot.documents.forEach((element) {
         newAchivesData=Product(
@@ -45,9 +46,58 @@ Future<void>getShirtData()async{
       },
       );
       newAchives = newList;
+      notifyListeners();
 
     }
-    List<Product>get getnewAchivesList{
+    List<Product>get getNewAchivesList{
       return newAchives;
+
+    }
+
+    List<Product>homeFeauture=[];
+    Product homefeautureData;
+    Future<void>getHomeFuturetData()async{
+      List<Product> newList=[];
+      QuerySnapshot shirtSnapShot=await Firestore.instance
+          .collection("productfeauture")
+          .getDocuments();
+      shirtSnapShot.documents.forEach((element) {
+        feautureData=Product(
+            image:element.data["image"],
+            name: element.data["name"],
+            price: element.data["price"]);
+        newList.add(feautureData);
+      },
+      );
+      homeFeauture = newList;
+      notifyListeners();
+
+    }
+    List<Product>get getHomeFeautureList{
+      return homeFeauture;
+    }
+
+
+    List<Product>homenewArchive=[];
+    Product homenewArchiveData;
+    Future<void>getHomenewArchiveData()async{
+      List<Product> newList=[];
+      QuerySnapshot shirtSnapShot=await Firestore.instance
+          .collection("productnewAchive")
+          .getDocuments();
+      shirtSnapShot.documents.forEach((element) {
+        homenewArchiveData=Product(
+            image:element.data["image"],
+            name: element.data["name"],
+            price: element.data["price"]);
+        newList.add(homenewArchiveData);
+      },
+      );
+      homenewArchive = newList;
+      notifyListeners();
+
+    }
+    List<Product>get getHomenewArchiveList{
+      return homenewArchive;
     }
 }

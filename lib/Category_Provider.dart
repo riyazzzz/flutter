@@ -30,7 +30,7 @@ Future<void>getShirtData() async{
   }
   );
   dress = newList;
-
+  notifyListeners();
 }
 List<Product>get getShirtList{
   return dress;
@@ -53,6 +53,7 @@ Future<void>getPantData() async{
   }
   );
   Pant = newList;
+  notifyListeners();
 
 }
 List<Product>get getPantList{
@@ -76,7 +77,7 @@ Future<void>getshoeData() async{
   }
   );
   shoes = newList;
-
+  notifyListeners();
 }
 List<Product>get getshoeList{
   return shoes;
@@ -99,7 +100,7 @@ Future<void>gettieData() async{
   }
   );
   tie = newList;
-
+  notifyListeners();
 }
 List<Product>get gettieList{
   return tie;
