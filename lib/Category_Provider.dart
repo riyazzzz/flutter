@@ -1,22 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/HomePage.dart';
 import 'package:flutter_map/Products.dart';
-class CategoryProvider with ChangeNotifier{
+
+import 'categoryIcon.dart';
+
+class CategoryProvider with ChangeNotifier {
 
 
-List<Product> dress=[];
-Product shirtData;
-List<Product> Pant=[];
-Product PantData;
-List<Product> shoes=[];
-Product shoesData;
-List<Product> tie=[];
-Product tieData;
+  List<Product> dress = [];
+  Product shirtData;
+  List<Product> Pant = [];
+  Product PantData;
+  List<Product> shoes = [];
+  Product shoesData;
+  List<Product> tie = [];
+  Product tieData;
+  List<CategoryIcon> categoryIcon = [];
+  CategoryIcon iconData;
+
+
+  Future<void> getCategoryIconsData() async {
+    List<CategoryIcon>newList = [];
+    QuerySnapshot shirtSnapShot = await Firestore.instance
+        .collection("categoryicon")
+        .getDocuments();
+    shirtSnapShot.documents.forEach((element) {
+      iconData = CategoryIcon(
+        image: element.data["image"],
+      );
+      newList.add(iconData);
+    },
+    );
+    categoryIcon = newList;
+    notifyListeners();
+  }
+
+  List<CategoryIcon> get getIconList {
+    return categoryIcon;
+  }
+
 Future<void>getShirtData() async{
   List<Product>newList=[];
-
-
   QuerySnapshot shirtSnapShot=await Firestore.instance
       .collection("Category").
   document("EM1RJ5gxBqtE8EsE7ND3")

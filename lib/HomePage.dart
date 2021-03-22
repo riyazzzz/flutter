@@ -12,6 +12,8 @@ import 'package:flutter_map/singleProduct.dart';
 import 'package:flutter_map/detailScreen.dart';
 import 'package:provider/provider.dart';
 
+import 'categoryIcon.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         height: 40,
         child: Image(
           color: Colors.white,
-          image: AssetImage("images/$image"),
+          image: NetworkImage(image),
         ),
       ),
     );
@@ -279,74 +281,70 @@ Widget _buildnewArchives() {
     List<Product> shoe= categoryProvider.getshoeList;
 
     List<Product> tie= categoryProvider.gettieList;
+
+    List<CategoryIcon> iconData=categoryProvider.getIconList;
+
     return Column(children: [
       Container(
         height: 35,
-        child: Container(
-          height: 15,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Categories",
-                style: TextStyle(
-                    fontSize: 17, fontWeight: FontWeight.w300),
-              ),
-            ],
-          ),
-        ),
-      ),
-      Container(
-        height: 50,
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        width: double.infinity,
         child: Column(
-          children: <Widget>[
-            Container(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap:(){
-                      Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
-                        name:"Shirt",
-                        snapShot:shirts,
-                      ),),);
-        },
-                      child: _buildCategoryProduct(image: "eyeglass.png", color: 0xFFe0e0e0),),
-                  GestureDetector(
-                      onTap:(){
-                        Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
-                          name:"Pant",
-                          snapShot: Pant,
-                        ),),);
-                      },
 
-                      child:_buildCategoryProduct(image: "dress.png", color: 0xFFb3b3b3)),
-                  GestureDetector  (
-                      onTap:(){
-                        Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
-                          name:"Shoe",
-                          snapShot:shoe,
-                        ),),);
-                      },
-                      child:_buildCategoryProduct(image: "camera.png", color: 0xFF808080)),
-                  GestureDetector(
-                      onTap:(){
-                        Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
-                          name:"Tie",
-                              snapShot:tie,
-                        ),),);
-                      },
-                      child:_buildCategoryProduct(image: "shirt.png", color: 0xff33dcfd)),
-                ],
-              ),
+          children: <Widget>[
+            Text(
+              "Categories",
+              style: TextStyle(
+                  fontSize: 17, fontWeight: FontWeight.w300),
             ),
           ],
         ),
       ),
-    ]);
+      Container(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+
+              children: [
+                GestureDetector(
+                  onTap:(){
+                    Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
+                      name:"Shirt",
+                      snapShot:shirts,
+                    ),),);
+                  },
+                  child: _buildCategoryProduct(image: iconData[0].image, color: 0xFFe0e0e0),),
+                GestureDetector(
+                    onTap:(){
+                      Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
+                        name:"Pant",
+                        snapShot: Pant,
+                      ),),);
+                    },
+
+                    child:_buildCategoryProduct(image: iconData[1].image, color: 0xFFb3b3b3)),
+                GestureDetector  (
+                    onTap:(){
+                      Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
+                        name:"Shoe",
+                        snapShot:shoe,
+                      ),),);
+                    },
+                    child:_buildCategoryProduct(image: iconData[3].image, color: 0xFF808080)),
+                GestureDetector(
+                    onTap:(){
+                      Navigator.of(context).push(MaterialPageRoute(builder:(ctx)=> ListProduct(
+                        name:"Tie",
+                        snapShot:tie,
+                      ),),);
+                    },
+                    child:_buildCategoryProduct(image: iconData[2].image, color: 0xff33dcfd)),
+              ],
+            )
+        ),
+
+
+
+    ]
+    );
   }
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
@@ -363,6 +361,8 @@ productProvider.NewAchiveData();
 productProvider.getFuturetData();
 productProvider.getHomeFuturetData();
 productProvider.getHomenewArchiveData();
+    categoryProvider.getCategoryIconsData();
+
     return Scaffold(
         key: _key,
         drawer: _buildMyDrawer(),
