@@ -13,6 +13,7 @@ import 'package:flutter_map/detailScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'categoryIcon.dart';
+import'package:flutter_map/Notification button.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -384,10 +385,7 @@ productProvider.getHomenewArchiveData();
               icon: Icon(Icons.search, color: Colors.black),
               onPressed: () {},
             ),
-            IconButton(
-              icon: Icon(Icons.notifications_active_sharp, color: Colors.black),
-              onPressed: () {},
-            )
+            NotificationButton(),
           ],
         ),
         body:Container(

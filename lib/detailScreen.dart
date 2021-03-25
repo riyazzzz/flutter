@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'CartScreen.dart';
 import 'HomePage.dart';
+import 'Notification button.dart';
 class DetailScreen extends StatefulWidget {
   final String image;
   final String name;
@@ -187,7 +188,7 @@ Widget _color(){
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>HomePage(),),);
         },),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.notifications_none,color:Colors.black), onPressed: (){})
+          NotificationButton(),
         ],
       ),
       body: Container(

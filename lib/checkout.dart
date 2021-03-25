@@ -6,6 +6,7 @@ import 'package:flutter_map/singleCart.dart';
 import 'package:provider/provider.dart';
 
 import 'HomePage.dart';
+import 'Notification button.dart';
 class CheckOut extends StatefulWidget {
 
   @override
@@ -53,7 +54,7 @@ class _CheckOutState extends State<CheckOut> {
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
         },),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.notifications_none,color:Colors.black), onPressed: (){})
+          NotificationButton(),
         ],
       ),
       body:Container(

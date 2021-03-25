@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 
 import 'HomePage.dart';
+import 'Notification button.dart';
 import 'checkout.dart';
 
 
@@ -37,7 +38,10 @@ class _CartScreenState extends State<CartScreen> {
        color: Color(0xff746bc9),
         child:Text("Continious",style:TextStyle(fontSize: 18),),
           onPressed: (){
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CheckOut(),),);
+         productProvider.addNotification("notification");
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CheckOut(),
+            ),
+            );
           },
       ),
       ),
@@ -49,7 +53,7 @@ class _CartScreenState extends State<CartScreen> {
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>HomePage(),),);
         },),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.notifications_none,color:Colors.black), onPressed: (){})
+          NotificationButton(),
         ],
       ),
       body:Container(
