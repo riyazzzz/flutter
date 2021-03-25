@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/providers/Product_Provider.dart';
+import 'package:provider/provider.dart';
 
 import 'CartScreen.dart';
 import 'HomePage.dart';
@@ -15,7 +17,7 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   int count=1;
-
+ProductProvider productProvider;
   Widget _buildSizedProduct({String name}){
     return Container(
               color: Color(0xfff2f2f2),
@@ -136,11 +138,13 @@ Widget _button(){
     color:Colors.red,
     child: Text("CheckOut",style: TextStyle(fontSize: 15),),
     onPressed: (){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>CartScreen(
-        image:widget.image,
-        name:widget.name,
-        price:widget.price,
-      ),));
+   productProvider.getCart(
+     image:widget.image,
+     name: widget.name,
+     price:widget.price,
+     quentity: count,
+   );
+   Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
     }
     )
     );
@@ -172,6 +176,7 @@ Widget _color(){
   @override
 
   Widget build(BuildContext context) {
+    productProvider=Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title:Text("Details",style:TextStyle(color: Colors.black,fontSize: 18)),

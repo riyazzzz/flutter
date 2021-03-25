@@ -11,8 +11,8 @@ import 'package:flutter_map/checkout.dart';
 import 'package:flutter_map/sighUp.dart';
 import 'package:provider/provider.dart';
 
-import 'Category_Provider.dart';
-import 'Product_Provider.dart';
+import 'providers/Category_Provider.dart';
+import 'providers/Product_Provider.dart';
 import 'login.dart';
 
 void main()=>runApp(MyApp());
@@ -21,19 +21,19 @@ void main()=>runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner:false,
-      theme: ThemeData(
-          primaryColor: Color(0xffaf7373),
-          visualDensity: VisualDensity.adaptivePlatformDensity
-      ),
-      home:MultiProvider(
-        providers:[
-          ListenableProvider<CategoryProvider>(create:(ctx)=>CategoryProvider(),),
-          ListenableProvider<ProductProvider>(create:(ctx)=>ProductProvider(),),
-        ],
+    return MultiProvider(
+      providers:[
+        ListenableProvider<CategoryProvider>(create:(ctx)=>CategoryProvider(),),
+        ListenableProvider<ProductProvider>(create:(ctx)=>ProductProvider(),),
+      ],
 
-        child: StreamBuilder(stream:FirebaseAuth.instance.onAuthStateChanged,
+    child:  MaterialApp(
+        debugShowCheckedModeBanner:false,
+        theme: ThemeData(
+            primaryColor: Color(0xffaf7373),
+            visualDensity: VisualDensity.adaptivePlatformDensity
+        ),
+      home: StreamBuilder(stream:FirebaseAuth.instance.onAuthStateChanged,
             builder:(ctx,snapShot){
               if(snapShot.hasData){
                 return HomePage();
