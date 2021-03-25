@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 
 import 'HomePage.dart';
+import 'checkout.dart';
 
 
 class CartScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _CartScreenState extends State<CartScreen> {
        color: Color(0xff746bc9),
         child:Text("Continious",style:TextStyle(fontSize: 18),),
           onPressed: (){
-
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CheckOut(),),);
           },
       ),
       ),

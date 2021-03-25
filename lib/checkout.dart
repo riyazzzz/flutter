@@ -57,24 +57,25 @@ class _CheckOutState extends State<CheckOut> {
       ),
       body:Container(
         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-        child:ListView.builder(
-          itemCount: productProvider.getCartModelListlength,
-          itemBuilder:(ctx,index){
-            return  Column(
+        child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+        ListView.builder(
+        itemCount: productProvider.getCartModelListlength,
+            itemBuilder:(ctx,index){
+                return Single(
+                  image: productProvider.getCartModelList[index].image,
+                  name: productProvider.getCartModelList[index].name,
+                  price: productProvider.getCartModelList[index].price,
+                  quentity: productProvider.getCartModelList[index].quentity,
+
+                );}),
                 Container(
                   height: 150,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Single(
-                        image: productProvider.getCartModelList[index].image,
-                          name: productProvider.getCartModelList[index].name,
-                          price: productProvider.getCartModelList[index].price,
-                      quentity: productProvider.getCartModelList[index].quentity,
 
-                      ),
                       _buildbottomDet(startName:"Your price",
                           endName: "\$60"),
                       _buildbottomDet(startName:"Discount",
@@ -87,14 +88,10 @@ class _CheckOutState extends State<CheckOut> {
                   ),
                 ),
               ],
-            );
-          }
-
-
+    ),
 
 
         ),
-      ),
-    );
+      );
   }
 }
