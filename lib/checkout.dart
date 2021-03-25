@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/CartScreen.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:flutter_map/singleCart.dart';
 import 'package:provider/provider.dart';
@@ -49,29 +50,34 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,),onPressed: (){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>HomePage(),),);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
         },),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.notifications_none,color:Colors.black), onPressed: (){})
         ],
       ),
       body:Container(
-        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+
+        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
         child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-        ListView.builder(
-        itemCount: productProvider.getCartModelListlength,
-            itemBuilder:(ctx,index){
-                return Single(
-                  image: productProvider.getCartModelList[index].image,
-                  name: productProvider.getCartModelList[index].name,
-                  price: productProvider.getCartModelList[index].price,
-                  quentity: productProvider.getCartModelList[index].quentity,
+        Container(
+          height:520,
+          child: ListView.builder(
+          itemCount: productProvider.getCartModelListlength,
+             shrinkWrap: true,
+              itemBuilder:(ctx,index){
+                  return Single(
+                    image: productProvider.getCartModelList[index].image,
+                    name: productProvider.getCartModelList[index].name,
+                    price: productProvider.getCartModelList[index].price,
+                    quentity: productProvider.getCartModelList[index].quentity,
 
-                );}),
+                  );}),
+        ),
                 Container(
-                  height: 150,
+                  height: 120,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

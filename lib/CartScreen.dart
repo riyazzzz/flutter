@@ -52,15 +52,20 @@ class _CartScreenState extends State<CartScreen> {
           IconButton(icon: Icon(Icons.notifications_none,color:Colors.black), onPressed: (){})
         ],
       ),
-      body:ListView.builder(
-        itemCount: productProvider.getCartModelListlength,
-        itemBuilder: (ctx,index)=>Single(
-          image:productProvider.getCartModelList[index].image,
-          name:productProvider.getCartModelList[index].name,
-          price:productProvider.getCartModelList[index].price,
-          quentity:productProvider.getCartModelList[index].quentity,
+      body:Container(
+        child: ListView.builder(
+          itemCount: productProvider.getCartModelListlength,
+          itemBuilder: (ctx,index)=>Single(
+            isCount: false,
+            image:productProvider.getCartModelList[index].image,
+            name:productProvider.getCartModelList[index].name,
+            price:productProvider.getCartModelList[index].price,
+            quentity:productProvider.getCartModelList[index].quentity,
+          ),
         ),
+
       ),
+
     );
   }
 }

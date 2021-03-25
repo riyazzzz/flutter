@@ -84,6 +84,7 @@ Widget _buildImage(){
   }
   Widget _quantity(){
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children:[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -271,7 +272,9 @@ Widget _color(){
                     ],
                   ),
                 ),
-
+SizedBox(
+  height: 15
+),
                             _button(),
       ],
     ),
