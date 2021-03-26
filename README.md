@@ -1,3 +1,43 @@
+
+
+
+
+
+
+
+
+
+
+_buildForm(
+startText: "Name",
+endText:"riyaz"
+
+),
+_buildForm(
+startText: "Email",
+endText:"riyas@gmail.com"
+),
+_buildForm(
+startText: "PhoneNumber",
+endText:"7373394500"
+),
+_buildForm(
+startText: "Gender",
+endText:"Male"
+),
+
+
+
+
+
+
+
+
+
+
+
+
+
 # flutter_map
 
 A new Flutter application.

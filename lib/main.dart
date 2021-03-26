@@ -8,6 +8,7 @@ import 'package:flutter_map/CartScreen.dart';
 import 'package:flutter_map/HomePage.dart';
 import 'package:flutter_map/Products.dart';
 import 'package:flutter_map/checkout.dart';
+import 'package:flutter_map/profileScreen.dart';
 import 'package:flutter_map/sighUp.dart';
 import 'package:provider/provider.dart';
 
@@ -22,30 +23,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers:[
-        ListenableProvider<CategoryProvider>(create:(ctx)=>CategoryProvider(),),
-        ListenableProvider<ProductProvider>(create:(ctx)=>ProductProvider(),),
+      providers: [
+        ListenableProvider<CategoryProvider>(
+          create: (ctx) => CategoryProvider(),),
+        ListenableProvider<ProductProvider>(
+          create: (ctx) => ProductProvider(),),
       ],
 
-    child:  MaterialApp(
-        debugShowCheckedModeBanner:false,
-        theme: ThemeData(
-            primaryColor: Color(0xffaf7373),
-            visualDensity: VisualDensity.adaptivePlatformDensity
-        ),
-      home: StreamBuilder(stream:FirebaseAuth.instance.onAuthStateChanged,
-            builder:(ctx,snapShot){
-              if(snapShot.hasData){
-                return HomePage();
-              }
-              else
-              {
-                return HomePage();
-              }
-            }
-
-        ),
+      child: StreamBuilder(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (ctx, snapShot) {
+            return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(iconTheme: IconThemeData(color:Colors.black)),
+           home: ProfileScreen(),
+            );
+          }
       ),
     );
+
   }
 }
