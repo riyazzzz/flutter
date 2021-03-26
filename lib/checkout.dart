@@ -32,6 +32,18 @@ class _CheckOutState extends State<CheckOut> {
   @override
   Widget build(BuildContext context) {
     productProvider=Provider.of<ProductProvider>(context);
+    double subTotal=0;
+    double disCount=3;
+    double disCountRupees;
+    double shipping=50;
+    double total;
+    productProvider.getCheckOutModelList.forEach((element)
+    {
+      subTotal += element.price * element.quentity;
+    }
+    );
+    disCountRupees=disCount/100*subTotal;
+    total=subTotal+shipping-disCountRupees;
     return Scaffold(
       bottomNavigationBar: Container(
         height: 70,
@@ -66,14 +78,14 @@ class _CheckOutState extends State<CheckOut> {
         Container(
           height:520,
           child: ListView.builder(
-          itemCount: productProvider.getCartModelListlength,
+          itemCount: productProvider.getCheckOutModelListLength,
              shrinkWrap: true,
               itemBuilder:(ctx,index){
                   return Single(
-                    image: productProvider.getCartModelList[index].image,
-                    name: productProvider.getCartModelList[index].name,
-                    price: productProvider.getCartModelList[index].price,
-                    quentity: productProvider.getCartModelList[index].quentity,
+                    image: productProvider.getCheckOutModelList[index].image,
+                    name: productProvider.getCheckOutModelList[index].name,
+                    price: productProvider.getCheckOutModelList[index].price,
+                    quentity: productProvider.getCheckOutModelList[index].quentity,
 
                   );}),
         ),
@@ -81,16 +93,17 @@ class _CheckOutState extends State<CheckOut> {
                   height: 120,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                     children: [
 
-                      _buildbottomDet(startName:"Your price",
-                          endName: "\$60"),
+                      _buildbottomDet(startName:"Subtotal",
+                          endName: "\Rs.${subTotal.toStringAsFixed(2)}"),
                       _buildbottomDet(startName:"Discount",
-                          endName: "3%"),
+                          endName: "\% ${disCount.toStringAsFixed(2)}"),
                       _buildbottomDet(startName:"Shipping",
-                          endName: "\$ 60"),
+                          endName: "\Rs.  ${shipping.toStringAsFixed(2)}"),
                       _buildbottomDet(startName:"Total",
-                          endName: "\$120"),
+                          endName: "\Rs. ${total.toStringAsFixed(2)}"),
                     ],
                   ),
                 ),
