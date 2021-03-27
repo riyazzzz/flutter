@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(iconTheme: IconThemeData(color:Colors.black)),
-           home: SignUp(),
+           home: HomePage(),
             );
           }
       ),

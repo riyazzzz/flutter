@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/profileScreen.dart';
 import 'package:flutter_map/providers/Category_Provider.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:flutter_map/Products.dart';
 import 'package:flutter_map/listProduct.dart';
 import 'package:flutter_map/singleProduct.dart';
 import 'package:flutter_map/detailScreen.dart';
+import 'package:flutter_map/usermodule.dart';
 import 'package:provider/provider.dart';
 
 import 'categoryIcon.dart';
@@ -216,29 +218,50 @@ Widget _buildnewArchives() {
   );
 
 }
+Widget _buildProfile(){
+    List <UserModel> userModel=productProvider.userModelList;
+    return Column(
+      children: userModel.map((e)  {
+          return UserAccountsDrawerHeader(
+          accountName: Text(e.userName,
+          style: TextStyle(color: Colors.black)),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: AssetImage("images/camera.png"),
+      ),
+      decoration: BoxDecoration(
+        color: Color(0xfff8f8f8),
+      ),
+      accountEmail:
+      Text(e.userEmail,
+          style: TextStyle(color: Colors.black)),
 
+);}).toList());
+
+}
 
 
   Widget _buildMyDrawer() {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text("Riyas", style: TextStyle(color: Colors.black)),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("images/camera.png"),
-            ),
-            decoration: BoxDecoration(
-              color: Color(0xfff8f8f8),
-            ),
-            accountEmail:
-                Text("Riyas@gmail.com", style: TextStyle(color: Colors.black)),
-          ),
+
+          _buildProfile(),
+
+
+
           ListTile(
             enabled: true,
             onTap: () {},
             leading: Icon(Icons.home),
             title: Text("Home"),
+          ),
+          ListTile(
+            enabled: true,
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>ProfileScreen()));
+            },
+            leading: Icon(Icons.home),
+            title: Text("Profile"),
           ),
           ListTile(
             onTap: () {},
@@ -362,7 +385,9 @@ productProvider.NewAchiveData();
 productProvider.getFuturetData();
 productProvider.getHomeFuturetData();
 productProvider.getHomenewArchiveData();
+    productProvider.getUserData();
     categoryProvider.getCategoryIconsData();
+
 
     return Scaffold(
         key: _key,
