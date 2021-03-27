@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,9 @@ RegExp regExp = new RegExp(p);
 bool obserText=true;
 String email;
 String password;
+    String userName;
+bool isMale=true;
+String phonenumber;
 class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _Scaffoldkey = GlobalKey<ScaffoldState>();
@@ -31,9 +35,20 @@ class _SignUpState extends State<SignUp> {
     final FormState _form=_formKey.currentState;
     if(!_form.validate()) {
       try {
-        AuthResult result = await FirebaseAuth.instance
+       UserCredential result = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
-        print(result.user.uid);
+              FirebaseFirestore.instance.collection("User").doc(result.user.uid).set({
+          "UserName":userName,
+          "UserId":result.user.uid,
+          "UserEmail":email,
+                "UserGender":isMale==true?"Male":"Female",
+                "Mobile Number":phonenumber,
+
+
+
+        });
+
+
       } on PlatformException catch(e) {
         print(e.message.toString());
         {
@@ -53,13 +68,18 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     Widget _buildAlltextFormField (){
       return Container(
-        height: 350,
+        height: 400,
         width: 370,
         child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
           MyText(
           name:"UserName",
+          onChanged:(value){
+            setState(() {
+              userName=value;
+            });
+          },
           validator:(value){
             if(value == ""){
               return "please Fill UserName";
@@ -113,8 +133,14 @@ class _SignUpState extends State<SignUp> {
             });
           }
         ),
-        MyText(
+            MyText(
           name:"MobileNo",
+          onChanged: (value){
+            setState(() {
+              phonenumber=value;
+            });
+
+          },
           validator:(value){
             if(value == ""){
               return "please Fill MobileNo";
@@ -127,6 +153,29 @@ class _SignUpState extends State<SignUp> {
           },
         ),
 
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  isMale=!isMale;
+                });
+              },
+
+              child: Container(
+                padding: EdgeInsets.only(left:10),
+                height: 60,
+                width: double.infinity,
+                decoration:BoxDecoration(border:Border.all(color:Colors.grey)),
+                child:Center(
+                  child: Row(
+                    children: [
+                      Text(isMale==true?"Male":"Female",style: TextStyle(
+                          color:Colors.black87,fontSize: 17
+                      ),),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ]
       )
       );
@@ -155,7 +204,9 @@ class _SignUpState extends State<SignUp> {
                   ),
 
                       _buildAlltextFormField (),
-
+                       SizedBox(
+                         height: 50,
+                       ),
                        myButton(
                          onPressed: (){
                            validation();

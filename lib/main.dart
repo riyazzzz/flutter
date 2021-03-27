@@ -11,13 +11,17 @@ import 'package:flutter_map/checkout.dart';
 import 'package:flutter_map/profileScreen.dart';
 import 'package:flutter_map/sighUp.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'providers/Category_Provider.dart';
 import 'providers/Product_Provider.dart';
 import 'login.dart';
 
-void main()=>runApp(MyApp());
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -31,12 +35,12 @@ class MyApp extends StatelessWidget {
       ],
 
       child: StreamBuilder(
-          stream: FirebaseAuth.instance.onAuthStateChanged,
+          stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, snapShot) {
             return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(iconTheme: IconThemeData(color:Colors.black)),
-           home: HomePage(),
+           home: SignUp(),
             );
           }
       ),

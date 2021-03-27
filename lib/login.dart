@@ -29,7 +29,7 @@ class _LoginState extends State<Login> {
     final FormState _form=_formKey.currentState;
     if(!_form.validate()) {
       try {
-        AuthResult result = await FirebaseAuth.instance
+        UserCredential result = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         print(result.user.uid);
       } on PlatformException catch(e){
