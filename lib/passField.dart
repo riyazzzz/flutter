@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 class PassField extends StatelessWidget {
 
   final bool obserText;
-  final Function validator;
+  final TextEditingController controller;
   final String name;
   final Function onTap;
-  final Function onChanged;
-
-  const PassField({Key key,this.onChanged, this.validator,this.obserText, this.name,this.onTap}) : super(key: key);
+   const PassField({Key ke,this.obserText, this.name,this.controller,this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return   TextFormField(
+      controller: controller,
       obscureText: obserText,
-      validator: validator,
-      onChanged:onChanged,
       decoration: InputDecoration(
         suffixIcon: GestureDetector(
           onTap:onTap,

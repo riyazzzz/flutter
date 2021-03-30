@@ -6,7 +6,7 @@ class ChangeScreen extends StatelessWidget {
   final Function onTap;
 
   // ignore: non_constant_identifier_names
-  const ChangeScreen({Key key, this.WhichAccount, this.name, this.onTap}) : super(key: key);
+  const ChangeScreen({Key key, this.WhichAccount, this.name, this.onTap, String whichAccount}) : super(key: key);
 
 
   @override

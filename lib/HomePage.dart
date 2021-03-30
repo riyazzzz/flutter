@@ -9,6 +9,7 @@ import 'package:flutter_map/providers/Category_Provider.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:flutter_map/Products.dart';
 import 'package:flutter_map/listProduct.dart';
+import 'package:flutter_map/search.dart';
 import 'package:flutter_map/singleProduct.dart';
 import 'package:flutter_map/detailScreen.dart';
 import 'package:flutter_map/usermodule.dart';
@@ -226,7 +227,7 @@ Widget _buildProfile(){
           accountName: Text(e.userName,
           style: TextStyle(color: Colors.black)),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: AssetImage("images/camera.png"),
+        backgroundImage: e.userImage==null?AssetImage("images/camera.png"):NetworkImage(e.userImage),
       ),
       decoration: BoxDecoration(
         color: Color(0xfff8f8f8),
@@ -406,10 +407,7 @@ productProvider.getHomenewArchiveData();
                 _key.currentState.openDrawer();
               }),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.black),
-              onPressed: () {},
-            ),
+
             NotificationButton(),
           ],
         ),

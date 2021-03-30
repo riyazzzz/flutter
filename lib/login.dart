@@ -22,128 +22,131 @@ String password;
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _Scaffoldkey = GlobalKey<ScaffoldState>();
-
+  final TextEditingController email = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
 
   void validation() async {
-    final FormState _form=_formKey.currentState;
-    if(!_form.validate()) {
+    if (email.text.isEmpty &&
+        password.text.isEmpty) {
+      _Scaffoldkey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+              "All Fields Are empty"),
+        ),
+      );
+    } else if (email.text.isEmpty) {
+      _Scaffoldkey.currentState.showSnackBar(
+        SnackBar(content: Text("Email is Empty"),
+        ),
+      );
+    } else if (!regExp.hasMatch(email.text)) {
+      _Scaffoldkey.currentState.showSnackBar(
+        SnackBar(content: Text("try valid Email"),
+        ),
+      );
+    }
+    else if (password.text.length < 8) {
+      _Scaffoldkey.currentState.showSnackBar(
+        SnackBar(content: Text("Password Must be 8"),
+        ),
+      );
+    }
+    else if (password.text.isEmpty) {
+      _Scaffoldkey.currentState.showSnackBar(
+        SnackBar(content: Text("Password is empty"),
+        ),
+      );
+    }
+    else {
       try {
         UserCredential result = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-        print(result.user.uid);
-      } on PlatformException catch(e){
-        print(e.message.toString());
-        _Scaffoldkey.currentState.showSnackBar(SnackBar(content: Text(e.message),));
+            .createUserWithEmailAndPassword(
+            email: email.text, password: password.text);
       }
-    }
-    else
-    {
+  on PlatformException catch (e) {
+  _Scaffoldkey.currentState.showSnackBar(SnackBar(content: Text(e.message)));
 
-
-    }
   }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      key: _Scaffoldkey,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Form(
-          key:_formKey,
-          child:ListView(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    height:200,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text("Login",style: TextStyle(fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ],
+}
+  }
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        key: _Scaffoldkey,
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("Login", style: TextStyle(fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  Container(
-                      height:300,
+                    Container(
+                      height: 300,
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       width: double.infinity,
 
-                      child:Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           MyText(
-                            name:"Email",
-                            onChanged: (value){
-                              setState(() {
-                                email=value;
-                              });
-                            },
-                              validator:(value){
-                                       if(value == ""){
-                                 return "please Fill email";
-                                     }
-                               else if(!regExp.hasMatch(value))
-                                      {
-                                    return "Email is In valid";
-                                      }
-                                 return "";
-                                   },
+                            name: "Email",
+                            controller: email,
                           ),
                           PassField(
-                            name:"Password",
-                              onChanged: (value){
+                              name: "Password",
+                              obserText: obserText,
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
                                 setState(() {
-                                  password=value;
+                                  obserText = !obserText;
                                 });
-                              },
-                            obserText: obserText,
-                            validator: (value){
-                              if(value == "") {
-                                return "please Fill Password";
                               }
-                              else if(value.length<8){
-                                return"Password is too short";
-                              }
-                              return"";
-                              },
-                           onTap:() {
-                             FocusScope.of(context).unfocus();
-                             setState(() {
-                               obserText = !obserText;
-                             });
-                           }
                           ),
-                         myButton(onPressed:() {
-                           validation();
-                         },
-                           name: "Login",
-                         ),
+                          myButton(onPressed: () {
+                            validation();
+                          },
+                            name: "Login",
+                          ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: ChangeScreen(
-                            name:"SignUp",WhichAccount:"I Have Not Account",onTap: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>SignUp(),),);},
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: ChangeScreen(
+                              name: "SignUp",
+                              WhichAccount: "I Have Not Account",
+                              onTap: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (ctx) => SignUp(),),);
+                              },
+                            ),
                           ),
-                        ),
                         ],
                       ),
 
 
-                  )
+                    )
 
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
-}

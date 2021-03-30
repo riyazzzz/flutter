@@ -2,18 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/HomePage.dart';
 import 'package:flutter_map/Products.dart';
+import 'package:flutter_map/providers/Category_Provider.dart';
+import 'package:flutter_map/providers/Product_Provider.dart';
+import 'package:flutter_map/search.dart';
+import 'package:flutter_map/search_prouct.dart';
 import 'package:flutter_map/singleProduct.dart';
+import 'package:provider/provider.dart';
 
 class ListProduct extends StatelessWidget {
   final List<Product>snapShot;
   final String name;
-
-
-  const ListProduct({Key key, this.name, this.snapShot}) : super(key: key);
+  bool isCategory=true;
+  ListProduct({Key key, this.name, this.snapShot,this.isCategory}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
+    CategoryProvider categoryProvider=Provider.of<CategoryProvider>(context);
+    ProductProvider productProvider=Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -22,10 +28,18 @@ class ListProduct extends StatelessWidget {
        color: Colors.black,
      ),
         actions: <Widget>[
-
+isCategory==true?
           IconButton(icon: Icon(Icons.search, color: Colors.black,),
-              onPressed: () {}
-          ),
+              onPressed: () {
+      categoryProvider.getSearchList(list: snapShot);
+      showSearch(context: context, delegate: SearchCategory());
+    },
+          ): IconButton(icon: Icon(Icons.search, color: Colors.black,),
+    onPressed: () {
+      productProvider.getSearchList(list: snapShot);
+      showSearch(context: context, delegate: SearchProduct());
+    },
+),
           IconButton(icon: Icon(Icons.notifications_none, color: Colors.black),
               onPressed: () {})
         ],

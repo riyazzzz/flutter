@@ -1,20 +1,13 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/CartScreen.dart';
-import 'package:flutter_map/HomePage.dart';
-import 'package:flutter_map/Products.dart';
-import 'package:flutter_map/checkout.dart';
-import 'package:flutter_map/profileScreen.dart';
-import 'package:flutter_map/sighUp.dart';
+import 'package:flutter_map/providers/Category_Provider.dart';
+import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'providers/Category_Provider.dart';
-import 'providers/Product_Provider.dart';
+import 'HomePage.dart';
 import 'login.dart';
 
 void main() async {
@@ -28,23 +21,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ListenableProvider<CategoryProvider>(
-          create: (ctx) => CategoryProvider(),),
-        ListenableProvider<ProductProvider>(
-          create: (ctx) => ProductProvider(),),
+        ChangeNotifierProvider<CategoryProvider>(
+          create: (context) => CategoryProvider(),
+        ),
+        ChangeNotifierProvider<ProductProvider>(
+          create: (context) => ProductProvider(),
+        ),
       ],
-
-      child: StreamBuilder(
+      child: MaterialApp(
+        theme: ThemeData(
+          primaryColor: Color(0xff746bc9),
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+        debugShowCheckedModeBanner: false,
+        home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snapShot) {
-            return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(iconTheme: IconThemeData(color:Colors.black)),
-           home: HomePage(),
-            );
-          }
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return HomePage();
+            } else {
+              return Login();
+            }
+          },
+        ),
       ),
     );
-
   }
 }
