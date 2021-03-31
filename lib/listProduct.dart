@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/HomePage.dart';
+import 'package:flutter_map/Notification%20button.dart';
 import 'package:flutter_map/Products.dart';
 import 'package:flutter_map/providers/Category_Provider.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
@@ -9,89 +10,140 @@ import 'package:flutter_map/search_prouct.dart';
 import 'package:flutter_map/singleProduct.dart';
 import 'package:provider/provider.dart';
 
-class ListProduct extends StatelessWidget {
-  final List<Product>snapShot;
-  final String name;
-  bool isCategory=true;
-  ListProduct({Key key, this.name, this.snapShot,this.isCategory}) : super(key: key);
+import 'detailScreen.dart';
 
+
+class ListProduct extends StatelessWidget {
+  final String name;
+  bool isCategory = true;
+  final List<Product> snapShot;
+  ListProduct({
+    this.name,
+    this.isCategory,
+    this.snapShot,
+  });
+
+  Widget _buildTopName() {
+    return Column(
+      children: <Widget>[
+        Container(
+          height: 50,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    name,
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildMyGridView(context) {
+    final Orientation orientation = MediaQuery.of(context).orientation;
+
+    return Container(
+      height: 700,
+      child: GridView.count(
+        crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+        childAspectRatio: orientation == Orientation.portrait ? 0.8 : 0.9,
+        scrollDirection: Axis.vertical,
+        children: snapShot
+            .map(
+              (e) => GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (ctx) => DetailScreen(
+                    image: e.image,
+                    name: e.name,
+                    price: e.price,
+                  )));
+            },
+            child: SingleProduct(
+              price: e.price,
+              image: e.image,
+              name: e.name,
+            ),
+          ),
+        )
+            .toList(),
+      ),
+    );
+  }
+
+  CategoryProvider categoryProvider;
+  ProductProvider productProvider;
+  Widget _buildSearchBar(context) {
+    return isCategory == true
+        ? IconButton(
+      icon: Icon(
+        Icons.search,
+        color: Colors.black,
+      ),
+      onPressed: () {
+        categoryProvider.getSearchList(list: snapShot);
+        showSearch(context: context, delegate: SearchCategory());
+      },
+    )
+        : IconButton(
+      icon: Icon(
+        Icons.search,
+        color: Colors.black,
+      ),
+      onPressed: () {
+        productProvider.getSearchList(list: snapShot);
+        showSearch(context: context, delegate: SearchProduct());
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    CategoryProvider categoryProvider=Provider.of<CategoryProvider>(context);
-    ProductProvider productProvider=Provider.of<ProductProvider>(context);
+    categoryProvider = Provider.of<CategoryProvider>(context);
+    productProvider = Provider.of<ProductProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-     iconTheme:IconThemeData(
-       color: Colors.black,
-     ),
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => HomePage(),
+                ),
+              );
+            }),
         actions: <Widget>[
-isCategory==true?
-          IconButton(icon: Icon(Icons.search, color: Colors.black,),
-              onPressed: () {
-      categoryProvider.getSearchList(list: snapShot);
-      showSearch(context: context, delegate: SearchCategory());
-    },
-          ): IconButton(icon: Icon(Icons.search, color: Colors.black,),
-    onPressed: () {
-      productProvider.getSearchList(list: snapShot);
-      showSearch(context: context, delegate: SearchProduct());
-    },
-),
-          IconButton(icon: Icon(Icons.notifications_none, color: Colors.black),
-              onPressed: () {})
+          _buildSearchBar(context),
+          NotificationButton(),
         ],
       ),
-      body: ListView(
-        children: [
-          Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children:<Widget>[
-                    Container(
-                  height:50,
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                      children: <Widget>[
-
-                        Text(name,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),),
-
-                      ],
-                    ),
-
-                  ],
-                ),
-          ),
-              SizedBox(height:10),
-              Container(
-                height:700,
-                child: GridView.count(
-                 crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  scrollDirection: Axis.vertical,
-                  children: snapShot.map((e) => SingleProduct(price: e.price,image:e.image,name:e.name),)
-                    .toList(),
-
-
-                ),
-              )
-
-            ],
-          ),
-          ),
-        ],
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20),
+        child: ListView(
+          children: <Widget>[
+            _buildTopName(),
+            SizedBox(
+              height: 10,
+            ),
+            _buildMyGridView(context),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 

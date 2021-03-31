@@ -52,6 +52,8 @@ class _CheckOutState extends State<CheckOut> {
 
                     "Product Price":e.price,
                     "ProductQuentity":e.quentity,
+                    "ProductImage":e.image,
+                    "ProuctColor":e.color,
                   }).toList(),
 
                   "Total Price":total.toStringAsFixed(2),
@@ -61,7 +63,9 @@ class _CheckOutState extends State<CheckOut> {
                   "UserNumber":e.userPhoneNumber,
                   "UserUid":user.uid,
                 });
+
                 productProvider.clearCheckoutProduct();
+                productProvider.addNotification("notification");
               }else
                 {
                   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("No Item Yet")));
@@ -114,6 +118,9 @@ class _CheckOutState extends State<CheckOut> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,),onPressed: (){
+          setState(() {
+            productProvider.clearCheckoutProduct();
+          });
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
         },),
         actions: <Widget>[
@@ -136,6 +143,8 @@ class _CheckOutState extends State<CheckOut> {
                   return Single(
                     index:index,
                     isCount: true,
+                    color:productProvider.getCheckOutModelList[myIndex].color,
+                    size:productProvider.getCheckOutModelList[myIndex].size,
                     image: productProvider.getCheckOutModelList[myIndex].image,
                     name: productProvider.getCheckOutModelList[myIndex].name,
                     price: productProvider.getCheckOutModelList[myIndex].price,

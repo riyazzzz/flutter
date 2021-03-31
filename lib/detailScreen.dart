@@ -21,13 +21,13 @@ class _DetailScreenState extends State<DetailScreen> {
 ProductProvider productProvider;
   Widget _buildSizedProduct({String name}){
     return Container(
-              color: Color(0xfff2f2f2),
-              height: 40,
-              width: 40,
-              child: Center(
-                child:Text(name,style: TextStyle(fontSize: 17),),
-              ),
-            );
+   color: Color(0xfff2f2f2),
+            height: 30,
+  width: 30,
+          child: Center(
+           child:Text(name,style: TextStyle(fontSize: 17),),
+     ),
+        );
 
   }
 Widget _buildImage(){
@@ -57,8 +57,8 @@ Widget _buildImage(){
   Widget _buildColorProduct({Color color}){
     return Container(
       color: color,
-      height: 40,
-      width: 40,
+      height: 30,
+      width: 30,
     );
 
   }
@@ -68,7 +68,7 @@ Widget _buildImage(){
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(widget.name,style: TextStyle(fontSize: 18),),
-          Text("\$ ${widget.price.toString()}",style: TextStyle(color:Colors.pink,fontSize: 18),)
+          Text("\Rs ${widget.price.toString()}",style: TextStyle(color:Colors.pink,fontSize: 18),)
         ],
       ),
     );
@@ -114,23 +114,138 @@ Widget _buildImage(){
       ],
     );
   }
-Widget _buildSize(){
-    return Container(
+  List<bool> sized = [true, false, false, false];
+  List<bool> colored = [true, false, false, false];
+  int sizeIndex = 0;
+  String size;
+  void getSize() {
+    if (sizeIndex == 0) {
+      setState(() {
+        size = "S";
+      });
+    } else if (sizeIndex == 1) {
+      setState(() {
+        size = "M";
+      });
+    } else if (sizeIndex == 2) {
+      setState(() {
+        size = "L";
+      });
+    } else if (sizeIndex == 3) {
+      setState(() {
+        size = "XL";
+      });
+    }
+  }
 
-      width: 240,
-      child:Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  int colorIndex = 0;
+  String color;
+  void getColor() {
+    if (colorIndex == 0) {
+      setState(() {
+        color = "Light Blue";
+      });
+    } else if (colorIndex == 1) {
+      setState(() {
+        color = "Light Green";
+      });
+    } else if (colorIndex == 2) {
+      setState(() {
+        color = "Light Yellow";
+      });
+    } else if (colorIndex == 3) {
+      setState(() {
+        color = "Cyan";
+      });
+    }
+  }
 
-          children: <Widget>[
-            _buildSizedProduct(name:"S"),
-            _buildSizedProduct(name:"M"),
-            _buildSizedProduct(name:"XL"),
-            _buildSizedProduct(name:"XXL"),
+  Widget  _buildSize() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "Size",
 
-          ]
-      ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Container(
+          width: 265,
+          child: ToggleButtons(
+            children: [
+              Text("S"),
+              Text("M"),
+              Text("L"),
+              Text("XL"),
+            ],
+            onPressed: (int index) {
+              setState(() {
+                for (int indexBtn = 0; indexBtn < sized.length; indexBtn++) {
+                  if (indexBtn == index) {
+                    sized[indexBtn] = true;
+                  } else {
+                    sized[indexBtn] = false;
+                  }
+                }
+              });
+              setState(() {
+                sizeIndex = index;
+              });
+            },
+            isSelected: sized,
+          ),
+        ),
+      ],
     );
-}
+  }
+
+  Widget _buildColorPart() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          "Color",
+
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        Container(
+          width: 265,
+          child: ToggleButtons(
+            fillColor: Color(0xff746bc9),
+            renderBorder: false,
+            children: [
+              _buildColorProduct(color: Colors.blue[200]),
+              _buildColorProduct(color: Colors.green[200]),
+              _buildColorProduct(color: Colors.yellow[200]),
+              _buildColorProduct(color: Colors.cyan[300]),
+            ],
+            onPressed: (int index) {
+              setState(() {
+                for (int indexBtn = 0; indexBtn < colored.length; indexBtn++) {
+                  if (indexBtn == index) {
+                    colored[indexBtn] = true;
+                  } else {
+                    colored[indexBtn] = false;
+                  }
+                }
+              });
+              setState(() {
+                colorIndex = index;
+              });
+            },
+            isSelected: colored,
+          ),
+        ),
+      ],
+    );
+  }
 Widget _button(){
     return  Container(
         height: 50,
@@ -140,8 +255,13 @@ Widget _button(){
     color:Colors.red,
     child: Text("CheckOut",style: TextStyle(fontSize: 15),),
     onPressed: (){
+      getSize();
+      getColor();
+
    productProvider.getCart(
      image:widget.image,
+     color:color,
+     size: size,
      name: widget.name,
      price:widget.price,
      quentity: count,
@@ -151,30 +271,7 @@ Widget _button(){
     )
     );
 }
-Widget _color(){
-    return Column(
-      children: [
-        SizedBox(
-            height: 15
-        ),
-        Container(
 
-          width: 240,
-          child:Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-              children: <Widget>[
-                _buildColorProduct(color:Colors.blue[200]),
-                _buildColorProduct(color:Colors.green[200]),
-                _buildColorProduct(color:Colors.yellow[200]),
-                _buildColorProduct(color:Colors.pinkAccent[200]),
-
-              ]
-          ),
-        ),
-      ],
-    );
-}
   @override
 
   Widget build(BuildContext context) {
@@ -225,17 +322,8 @@ Widget _color(){
                   ),
                 ),
                             _builddes(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Size",style: TextStyle(fontSize: 18),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 15
-                ),
                             _buildSize(),
+
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -245,7 +333,7 @@ Widget _color(){
                     ],
                   ),
                 ),
-           _color(),
+                            _buildColorPart(),
                 SizedBox(height: 10,),
                 Row(
                   children: [
@@ -259,12 +347,11 @@ Widget _color(){
                     children: [
                       Container(
 
-                        height: 30,
+                        height: 40,
                         width: 120,
 
                         decoration: BoxDecoration(
                           color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20),
 
                         ),
                         child: _quantity(),

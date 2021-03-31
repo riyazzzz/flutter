@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/CartScreen.dart';
 import 'package:flutter_map/profileScreen.dart';
 import 'package:flutter_map/providers/Category_Provider.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
@@ -17,6 +18,8 @@ import 'package:provider/provider.dart';
 
 import 'categoryIcon.dart';
 import'package:flutter_map/Notification button.dart';
+
+import 'login.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -35,7 +38,7 @@ var shirt;
 var tie;
 var pant;
 var shoes;
-
+FirebaseAuth firebaseauth;
 class _HomePageState extends State<HomePage> {
   Widget _buildCategoryProduct({String image, int color}) {
     return CircleAvatar(
@@ -265,7 +268,9 @@ Widget _buildProfile(){
             title: Text("Profile"),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>CartScreen()));
+            },
             leading: Icon(Icons.shopping_cart),
             title: Text("Cart"),
           ),
@@ -275,7 +280,12 @@ Widget _buildProfile(){
             title: Text("Info"),
           ),
           ListTile(
-            onTap: () {},
+            onTap: () {
+
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>Login()));
+
+            },
             leading: Icon(Icons.exit_to_app),
             title: Text("Exit"),
           ),

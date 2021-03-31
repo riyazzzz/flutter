@@ -38,7 +38,7 @@ class _CartScreenState extends State<CartScreen> {
        color: Color(0xff746bc9),
         child:Text("Continious",style:TextStyle(fontSize: 18),),
           onPressed: (){
-         productProvider.addNotification("notification");
+
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CheckOut(),
             ),
             );
@@ -62,6 +62,8 @@ class _CartScreenState extends State<CartScreen> {
           itemBuilder: (ctx,index)=>Single(
             isCount: false,
             index:index,
+            color:productProvider.getCartModelList[index].color,
+            size:productProvider.getCartModelList[index].size,
             image:productProvider.getCartModelList[index].image,
             name:productProvider.getCartModelList[index].name,
             price:productProvider.getCartModelList[index].price,

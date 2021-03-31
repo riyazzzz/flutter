@@ -14,12 +14,13 @@ class  SingleProduct extends StatelessWidget {
                   height: 250,
                  width: 170,
                   child:Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children:<Widget>[
-    (
+                                             (
                                     Container(
-                                       padding:EdgeInsets.symmetric(vertical: 20),
+                                       padding:EdgeInsets.symmetric(vertical: 5),
                                       child: Container(
-                                        height: 150,
+                                        height: 130,
                                         width: 150,
                                         decoration: BoxDecoration(
 
