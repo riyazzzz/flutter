@@ -4,177 +4,214 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/CartScreen.dart';
 import 'package:flutter_map/Products.dart';
+import 'package:flutter_map/cartmodel.dart';
+import 'package:flutter_map/myButton.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:flutter_map/singleCart.dart';
 import 'package:provider/provider.dart';
 
 import 'HomePage.dart';
 import 'Notification button.dart';
-class CheckOut extends StatefulWidget {
 
+
+class CheckOut extends StatefulWidget {
   @override
   _CheckOutState createState() => _CheckOutState();
 }
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-ProductProvider productProvider;
+
 class _CheckOutState extends State<CheckOut> {
-  TextStyle myStyle=TextStyle(
+  TextStyle myStyle = TextStyle(
     fontSize: 18,
   );
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget _buildbottomDet({ String startName, String endName}){
+  ProductProvider productProvider;
 
-    return  Row(
+  Widget _buildBottomSingleDetail({String startName, String endName}) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(startName,style:myStyle),
-        Text(endName,style:myStyle),
+      children: <Widget>[
+        Text(
+          startName,
+          style: myStyle,
+        ),
+        Text(
+          endName,
+          style: myStyle,
+        ),
       ],
     );
   }
+
   User user;
   double total;
-  int index;
-  Widget _buildButton(){
+  List<CartModel> myList;
+
+  Widget _buildButton() {
     return Column(
-      children:productProvider.userModelList.map((e){
-       return Container(
-         height:55,
-         width: double.infinity,
-         child: RaisedButton(
-            color: Color(0xff746bc9),
-            child:Text("Buy",style:TextStyle(fontSize: 18),),
-            onPressed: (){
-              if(productProvider.checkoutModelList.isNotEmpty){
-                FirebaseFirestore.instance.collection("Order").doc(user.uid).set({
-                  "Product":productProvider.checkoutModelList.map((e) => {
-                    "Product Name":e.name,
+        children: productProvider.userModelList.map((e) {
+          return Container(
+            height: 50,
+            child: myButton(
+              name: "Buy",
+              onPressed: () {
+                if (productProvider.getCheckOutModelList.isNotEmpty) {
+                  FirebaseFirestore.instance.collection("Order").add({
+                    "Product": productProvider.getCheckOutModelList
+                        .map((c) => {
+                      "ProductName": c.name,
+                      "ProductPrice": c.price,
+                      "ProductQuetity": c.quentity,
+                      "ProductImage": c.image,
+                      "Product Color": c.color,
+                      "Product Size": c.size,
+                    })
+                        .toList(),
+                    "TotalPrice": total.toStringAsFixed(2),
+                    "UserName": e.userName,
+                    "UserEmail": e.userEmail,
+                    "UserNumber": e.userPhoneNumber,
+                    "UserAddress": e.userAddress,
+                    "UserId": user.uid,
+                  });
+                  setState(() {
+                    myList.clear();
+                  });
 
-                    "Product Price":e.price,
-                    "ProductQuentity":e.quentity,
-                    "ProductImage":e.image,
-                    "ProuctColor":e.color,
-                  }).toList(),
-
-                  "Total Price":total.toStringAsFixed(2),
-                  "UserName":e.userName,
-                  "UserEmail":e.userEmail,
-                  "UserAddress":e.userAddress,
-                  "UserNumber":e.userPhoneNumber,
-                  "UserUid":user.uid,
-                });
-
-                productProvider.clearCheckoutProduct();
-                productProvider.addNotification("notification");
-              }else
-                {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("No Item Yet")));
+                  productProvider.addNotification("Notification");
+                } else {
+                  _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text("No Item Yet"),
+                    ),
+                  );
                 }
-
-            },
-          ),
-       );
-      }).toList()
-    );
+              },
+            ),
+          );
+        }).toList());
   }
+
+  @override
+  void initState() {
+    productProvider = Provider.of<ProductProvider>(context, listen: false);
+    myList = productProvider.checkoutModelList;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    user = FirebaseAuth.instance.currentUser;
+    double subTotal = 0;
+    double discount = 3;
+    double discountRupees;
+    double shipping = 60;
 
-     user=FirebaseAuth.instance.currentUser;
-    productProvider=Provider.of<ProductProvider>(context);
-    double subTotal=0;
-    double disCount=3;
-    double disCountRupees;
-    double shipping=50;
-
-    productProvider.getCheckOutModelList.forEach((element)
-    {
+    productProvider = Provider.of<ProductProvider>(context);
+    productProvider.getCheckOutModelList.forEach((element) {
       subTotal += element.price * element.quentity;
+    });
+
+    discountRupees = discount / 100 * subTotal;
+    total = subTotal + shipping - discountRupees;
+    if (productProvider.checkoutModelList.isEmpty) {
+      total = 0.0;
+      discount = 0.0;
+      shipping = 0.0;
     }
-    );
-    disCountRupees=disCount/100*subTotal;
-    total=subTotal+shipping-disCountRupees;
-    if(productProvider.checkoutModelList.isEmpty){
-      total=0.0;
-      disCount=0.0;
-      subTotal=0.0;
-      shipping=0.0;
-      disCountRupees=0.0;
-    }
-    return Scaffold(
-      key: _scaffoldKey,
-      bottomNavigationBar: Container(
-        height: 70,
-        width: 100,
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.only(bottom:10),
 
-        // ignore: deprecated_member_use
-        child:
-        _buildButton(),
-      ),
-      appBar: AppBar(
-        title:Text("Cart",style:TextStyle(color: Colors.black,fontSize: 18)),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,),onPressed: (){
-          setState(() {
-            productProvider.clearCheckoutProduct();
-          });
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
-        },),
-        actions: <Widget>[
-          NotificationButton(),
-        ],
-      ),
-      body:Container(
-
-        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
-        child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-        Container(
-          height:520,
-          child: ListView.builder(
-          itemCount: productProvider.getCheckOutModelListLength,
-             shrinkWrap: true,
-              itemBuilder:(ctx,myIndex){
-            index=myIndex;
-                  return Single(
-                    index:index,
-                    isCount: true,
-                    color:productProvider.getCheckOutModelList[myIndex].color,
-                    size:productProvider.getCheckOutModelList[myIndex].size,
-                    image: productProvider.getCheckOutModelList[myIndex].image,
-                    name: productProvider.getCheckOutModelList[myIndex].name,
-                    price: productProvider.getCheckOutModelList[myIndex].price,
-                    quentity: productProvider.getCheckOutModelList[myIndex].quentity,
-
-                  );}),
+    return WillPopScope(
+      onWillPop: () async {
+        return Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (ctx) => HomePage(),
+          ),
+        );
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("CheckOut Page", style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => HomePage(),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            NotificationButton(),
+          ],
         ),
-                Container(
-                  height: 120,
+        bottomNavigationBar: Container(
+          height: 70,
+          width: 100,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.only(bottom: 15),
+          child: _buildButton(),
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: ListView.builder(
+                    itemCount: myList.length,
+                    itemBuilder: (ctx, myIndex) {
+                      return CheckOutSingleProduct(
+                        index: myIndex,
+                        color: myList[myIndex].color,
+                        size: myList[myIndex].size,
+                        image: myList[myIndex].image,
+                        name: myList[myIndex].name,
+                        price: myList[myIndex].price,
+                        quentity: myList[myIndex].quentity,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                    children: [
-
-                      _buildbottomDet(startName:"Subtotal",
-                          endName: "\Rs.${subTotal.toStringAsFixed(2)}"),
-                      _buildbottomDet(startName:"Discount",
-                          endName: "\% ${disCount.toStringAsFixed(2)}"),
-                      _buildbottomDet(startName:"Shipping",
-                          endName: "\Rs.  ${shipping.toStringAsFixed(2)}"),
-                      _buildbottomDet(startName:"Total",
-                          endName: "\Rs. ${total.toStringAsFixed(2)}"),
+                    children: <Widget>[
+                      _buildBottomSingleDetail(
+                        startName: "Subtotal",
+                        endName: "\$ ${subTotal.toStringAsFixed(2)}",
+                      ),
+                      _buildBottomSingleDetail(
+                        startName: "Discount",
+                        endName: "${discount.toStringAsFixed(2)}%",
+                      ),
+                      _buildBottomSingleDetail(
+                        startName: "Shipping",
+                        endName: "\$ ${shipping.toStringAsFixed(2)}",
+                      ),
+                      _buildBottomSingleDetail(
+                        startName: "Total",
+                        endName: "\$ ${total.toStringAsFixed(2)}",
+                      ),
                     ],
                   ),
                 ),
-              ],
-    ),
-
-
+              )
+            ],
+          ),
         ),
-      );
+      ),
+    );
   }
 }

@@ -59,8 +59,8 @@ class _CartScreenState extends State<CartScreen> {
       body:Container(
         child: ListView.builder(
           itemCount: productProvider.getCartModelListlength,
-          itemBuilder: (ctx,index)=>Single(
-            isCount: false,
+          itemBuilder: (ctx,index)=>CheckOutSingleProduct(
+
             index:index,
             color:productProvider.getCartModelList[index].color,
             size:productProvider.getCartModelList[index].size,

@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'categoryIcon.dart';
 import'package:flutter_map/Notification button.dart';
 
+import 'checkout.dart';
 import 'login.dart';
 
 class HomePage extends StatefulWidget {
@@ -269,7 +270,7 @@ Widget _buildProfile(){
           ),
           ListTile(
             onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>CartScreen()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>CheckOut()));
             },
             leading: Icon(Icons.shopping_cart),
             title: Text("Cart"),
@@ -283,7 +284,6 @@ Widget _buildProfile(){
             onTap: () {
 
               FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>Login()));
 
             },
             leading: Icon(Icons.exit_to_app),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/checkout.dart';
 import 'package:flutter_map/providers/Product_Provider.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ Widget _buildImage(){
       width: 300,
 
       child:Wrap(  children:<Widget>[
-        Text("Lorem Ipsum is make a type specimen book. It has survived not only eap into electronic typesetting, remaining essentially unchanged. It was populari=f Letrase",style: TextStyle(fontSize: 15),),
+        Text("You Get Our Product in Cheaper Price",style: TextStyle(fontSize: 15),),
       ]),
     );
   }
@@ -254,20 +255,23 @@ Widget _button(){
     child: RaisedButton(
     color:Colors.red,
     child: Text("CheckOut",style: TextStyle(fontSize: 15),),
-    onPressed: (){
-      getSize();
-      getColor();
-
-   productProvider.getCart(
-     image:widget.image,
-     color:color,
-     size: size,
-     name: widget.name,
-     price:widget.price,
-     quentity: count,
-   );
-   Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(ctx)=>CartScreen(),),);
-    }
+      onPressed: () {
+        getSize();
+        getColor();
+        productProvider.getCheckOutData(
+          image: widget.image,
+          color: color,
+          size: size,
+          name: widget.name,
+          price: widget.price,
+          quentity: count,
+        );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (ctx) => CheckOut(),
+          ),
+        );
+      },
     )
     );
 }
